@@ -26,7 +26,7 @@ const errorHandlerMiddleware = require('./middleware/error-handler');
 
 // some extra packages to use for security
 // app.set('trust proxy', 1) // According to docs, if the hosting you are using is behind a reverse proxy, add this line.
-app.use(rateLimiter({ windowMs: 15*60*1000, max: 10 })); // rate limiter
+app.use(rateLimiter({ windowMs: 15*60*1000, max: 1000 })); // rate limiter
 app.use(express.json()); // parses json data so express can use it
 // app.use(express.urlencoded({ extended: true }))
 app.use(express.static("uploads"))
