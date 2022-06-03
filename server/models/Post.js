@@ -3,8 +3,9 @@ const mongoose = require('mongoose')
 const PostSchema = new mongoose.Schema({
    title: {
       type: String,
-      required: [true, 'Title is required'],
-      maxlength: 50
+      required: [true, 'Title is required.'],
+      minlength: [3, "Title must be minimum 3 characters long."],
+      maxlength: [50, "Title cannot be longer than 50 characters long."]
    },
    category: {
       type: String,
@@ -16,7 +17,8 @@ const PostSchema = new mongoose.Schema({
    description: {
       type: String,
       required: [true, 'Description is required'],
-      maxlength: 1000
+      minlength: [3, "Description must be minimum 3 characters long."],
+      maxlength: [50, "Description cannot be longer than 50 characters long."]
    },
    // image: {
    //    type: String,
