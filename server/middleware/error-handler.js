@@ -4,6 +4,9 @@
 const { StatusCodes } = require('http-status-codes')
 const errorHandlerMiddleware = (err, req, res, next) => {
 
+   // console.log(req.body, err, "HIT AGAIN")
+   // process.exit()
+
    // this block/object is for some mongoose errors that are weird and encased in a deeply nested object
    //(i.e unique validation throws a weird error object)
    let customError = {
