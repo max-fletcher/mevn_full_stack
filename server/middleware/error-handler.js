@@ -23,17 +23,37 @@ const errorHandlerMiddleware = (err, req, res, next) => {
 
    // if error is of type validation error, it has multiple nested objects, so it needs to be formatted before being sent
    if(err.name === 'ValidationError'){
-      customError.statusCode = StatusCodes.BAD_REQUEST // i.e status code - 400
-      customError.msg = Object.values(err.errors).map((item) => item.message).join(',')
 
-      // kept this here since I don't like the structure that John Smilga uses. This will replace the line above. It has the error
+      customError.statusCode = StatusCodes.UNPROCESSABLE_ENTITY // i.e status code - 422
+      // customError.msg = Object.values(err.errors).map((item) => item.message).join(',') // JOHN SMILGA'S APPROACH
+
+      // kept this here since I don't like the structure that JOHN SMILGA uses. This will replace the line above. It has the error
       // nested properly so it should be easy to pull relevant errors and place them in their proper spaces
-      // customError.msg = err
+      structures_errors = []
+
+      for(let key in err.errors){
+         console.log(key, err.errors[key].message)
+         let info = {
+            field : key,
+            message : err.errors[key].message
+         }
+         structures_errors.push(info)
+      }
+
+      const validation_error = 
+      {
+         error_type: "validation_errors",
+      };
+
+      validation_error.errors = structures_errors 
+      // console.log(validation_error);
+
+      customError.msg = validation_error
    }
 
    // this is to accomodate the unique validation error for email, coming from mongoose.
    if(err.code && err.code == 11000){
-      customError.statusCode = StatusCodes.BAD_REQUEST // i.e status code - 400
+      customError.statusCode = StatusCodes.UNPROCESSABLE_ENTITY // i.e status code - 422
       // ${Object.keys(err.keyValue) gives the key name nested inside the mongoose validation error object
       customError.msg = `Duplicate value entered for ${Object.keys(err.keyValue)} field ! Please choose another value.`
    }
@@ -46,7 +66,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
 
    // replaced line below to also accomodate for errors that are from mongoose and have weird structures
    // return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ err })
-   return res.status(customError.statusCode).json({ msg: customError.msg })
+   return res.status(customError.statusCode).json({ error: customError.msg })
 }
 
 module.exports = errorHandlerMiddleware

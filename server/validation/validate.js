@@ -28,7 +28,7 @@
 
          const joi_error = 
          {
-            error_type: "joi_error",
+            error_type: "joi_errors",
          };
 
          joi_error.errors = structures_errors

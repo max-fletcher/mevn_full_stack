@@ -60,7 +60,7 @@ const getAllPosts = async (req, res)=>{
       // const old_image = req.body.old_image
       // let new_image = ""
       
-      if(title === undefined || description === undefined){
+      if(!title || !description){
          throw new BadRequestError(`Title, description and category required`)
       }
          

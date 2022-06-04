@@ -4,6 +4,7 @@ const PostSchema = new mongoose.Schema({
    title: {
       type: String,
       required: [true, 'Title is required.'],
+      trim: true,
       minlength: [3, "Title must be minimum 3 characters long."],
       maxlength: [50, "Title cannot be longer than 50 characters long."]
    },
@@ -17,6 +18,7 @@ const PostSchema = new mongoose.Schema({
    description: {
       type: String,
       required: [true, 'Description is required'],
+      trim: true,
       minlength: [3, "Description must be minimum 3 characters long."],
       maxlength: [50, "Description cannot be longer than 50 characters long."]
    },

@@ -4,7 +4,7 @@ const { getAllPosts, createPost, showPost, updatePost, deletePost } = require('.
 const { validate_post_create, validate_post_update } = require('../validation/validate')
 
 router.get('/', getAllPosts)
-router.post('/', createPost)
+router.post('/', validate_post_create, createPost)
 router.get('/:id', showPost)
 router.patch('/:id', validate_post_update, updatePost)
 router.delete('/:id', deletePost)
