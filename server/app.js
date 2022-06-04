@@ -13,6 +13,18 @@ const res = require('express/lib/response')
 const app = express()
 // const authenticateUser = require('./middleware/authentication') // import authenticate middleware to check if a user is logged in (i.e has JWT)
 
+// Express File Upload
+const fileUpload = require("express-fileupload");
+app.use(fileUpload({
+      // limits: {
+      //    fileSize: 1024 * 1024 * 10 // 10 MB
+      // },
+      // createParentPath: true,
+      // abortOnLimit: true
+      preserveExtension: true
+   })
+);
+
 // connectDB
 const connectDB = require('./db/connect')
 

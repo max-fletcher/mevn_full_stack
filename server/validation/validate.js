@@ -12,29 +12,89 @@
       //    throw new CustomAPIError(error, 422)
       // }
 
-      const {error, value} = create_post_schema.validate(req.body)
-      if(error){
+      // if (!req.files.file) {
+      //    return res.status(400).send("No files were uploaded.");
+      // }
 
-         structures_errors = []
+      // initializing a joi_error object. Will append further data/errors into it if exists
+      const joi_error = 
+      {
+         error_type: "joi_errors",
+      };
+
+      let structured_errors = [] // for storing all errors as object
+
+      // file doesn\'t exists
+      // if(!req.files || !req.files.file){
+      //    let info = {
+      //       field : "file",
+      //       message : "File is required."
+      //    }
+
+      //    structured_errors.push(info)
+      // }
+      // else{ // if file exists
+      //    const file = req.files.file; // store file in variable
+      //    const file_mimetype = file.mimetype // fetch the file mimetype
+      //    const file_size = file.size // fetch the file mimetype
+         
+      //    if(!file_mimetype.startsWith('image')){
+      //       let info = {
+      //          field : "file",
+      //          message : "File must be of type image."
+      //       }
+   
+      //       structured_errors.push(info)
+      //    }
+
+      //    if(file_size > (1024 * 1024 * 10)){  // if filesize is above 10 MB
+      //       let info = {
+      //          field : "file",
+      //          message : "File must below 10 MB"
+      //       }
+   
+      //       console.log(structured_errors)
+      //       structured_errors.push(info)
+      //    }
+         
+      //    console.log("HIT", file_mimetype, file_size, structured_errors)
+      //    process.exit()
+         
+      //    file.mv(path, (err) => {
+      //       if (err) {
+      //          return res.status(500).send(err);
+      //       }
+      //       // return res.send({ status: "success", path: path });
+      //    });
+      // }
+
+      // process.exit()
+
+      const {error, value} = create_post_schema.validate(req.body)
+
+      if(error){
 
          for(let key in error.details){
             // console.log(key, error.details[key], error.details[key].message)
+            let message = error.details[key].message.replaceAll('\"', "")
+
             let info = {
                field : error.details[key].context.key,
-               message : error.details[key].message.replaceAll('\"', "")
+               message : message.charAt(0).toUpperCase() + message.slice(1)
             }
-            structures_errors.push(info)
+            structured_errors.push(info)
          }
-
-         const joi_error = 
-         {
-            error_type: "joi_errors",
-         };
-
-         joi_error.errors = structures_errors
-
-         return res.status(StatusCodes.UNPROCESSABLE_ENTITY).send({error : joi_error})
          // return res.status(400).send({error : error})
+      }
+
+      // throw error if any exist
+      if(structured_errors.length != 0){
+         joi_error.errors = structured_errors
+
+
+         // process.exit()
+
+         return res.status(StatusCodes.UNPROCESSABLE_ENTITY).send( {error : joi_error} )
       }
 
       next()
@@ -53,7 +113,7 @@
       const {error, value} = create_post_schema.validate(req.body)
       if(error){
 
-         structures_errors = []
+         structured_errors = []
 
          for(let key in error.details){
             // console.log(key, error.details[key], error.details[key].message)
@@ -61,7 +121,7 @@
                field : error.details[key].context.key,
                message : error.details[key].message.replaceAll('\"', "")
             }
-            structures_errors.push(info)
+            structured_errors.push(info)
          }
 
          const joi_error = 
@@ -69,7 +129,7 @@
             error_type: "joi_error",
          };
 
-         joi_error.errors = structures_errors
+         joi_error.errors = structured_errors
 
          return res.status(StatusCodes.UNPROCESSABLE_ENTITY).send({error : joi_error})
          // return res.status(400).send({error : error})

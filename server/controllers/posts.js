@@ -21,6 +21,9 @@ const getAllPosts = async (req, res)=>{
       const category = req.body.category
       const description = req.body.description
 
+      console.log("STOPPED")
+      process.exit()
+
       const post = await Post.create({ title: title, category: category, description: description })
 
       res.status( StatusCodes.CREATED ).json({ msg: "Post Created", data: post })
