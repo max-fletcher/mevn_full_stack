@@ -2,6 +2,7 @@ const Post = require('../models/Post')
 const StatusCodes = require('http-status-codes')
 const { BadRequestError, NotFoundError, CustomAPIError } = require('../errors')
 const fs = require('fs')
+const { log } = require('console')
 
 const getAllPosts = async (req, res)=>{
 
@@ -20,11 +21,11 @@ const getAllPosts = async (req, res)=>{
       const title = req.body.title
       const category = req.body.category
       const description = req.body.description
+      const file_path = req.body.file_path
 
-      console.log("STOPPED", req.body)
-      process.exit()
+      console.log(file_path)
 
-      const post = await Post.create({ title: title, category: category, description: description })
+      const post = await Post.create({ title: title, category: category, description: description, image: file_path })
 
       res.status( StatusCodes.CREATED ).json({ msg: "Post Created", data: post })
    }

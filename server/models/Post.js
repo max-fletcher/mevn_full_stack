@@ -22,10 +22,10 @@ const PostSchema = new mongoose.Schema({
       minlength: [3, "Description must be minimum 3 characters long."],
       maxlength: [50, "Description cannot be longer than 50 characters long."]
    },
-   // image: {
-   //    type: String,
-   //    required: [true, 'Image is required']
-   // },
+   image: {
+      type: String,
+      required: [true, 'Image is required']
+   },
    // content: {
    //    type: String,
    //    enum: ['interview', 'declined', 'pending'],

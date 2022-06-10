@@ -36,7 +36,7 @@ const { log } = require('console');
          structured_errors.push(info)
       }
       else{ // if file exists
-         const file = req.files.file; // store file in variable
+         var file = req.files.file; // store file in variable
          const file_mimetype = file.mimetype // fetch the file mimetype
          const file_size = file.size // fetch the file mimetype
          
@@ -60,18 +60,12 @@ const { log } = require('console');
          }
          
          // console.log("HIT", file_mimetype, file_size, structured_errors)
-         console.log("FILE", file);
+         // console.log("FILE", file);
          // process.exit()
 
-
-         // const path = __dirname + "../../uploads/posts/" + file.name + Date.now();
-         // Date.now().toString() + '_' +
-         const file_path = path.join(__dirname, '..', '..', 'server', 'uploads', 'posts', Date.now().toString() + '_' + file.name)
+         var file_path = path.join(__dirname, '..', '..', 'server', 'uploads', 'posts', Date.now().toString() + '_' + file.name).replace(/\\/g,'/')
          // console.log(file_path, typeof(Date.now().toString()))
          // process.exit()
-
-         await file.mv(file_path); // (need to onfirm) since we are using express-async-errors package, we don't need to throw errors using callback as 2nd parameter
-         req.filepath = file_path // appending file path if file was uploaded properly without any errors
       }
       
 
@@ -104,8 +98,11 @@ const { log } = require('console');
 
          return res.status(StatusCodes.UNPROCESSABLE_ENTITY).send( {error : joi_error} )
       }
-
-      console.log("trace 2")
+      else{
+         // If no errors exist(both joi and file validation), upload file. Also append the file_path to the request body).
+         await file.mv(file_path); // (need to onfirm) since we are using express-async-errors package, we don't need to throw errors using callback as 2nd parameter
+         req.body.file_path = file_path // appending file path if file was uploaded properly without any errors
+      }
 
       next()
    }
