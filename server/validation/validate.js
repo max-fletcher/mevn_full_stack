@@ -1,5 +1,7 @@
    const { create_post_schema, update_post_schema } = require('./schema/JoiSchema')
    const StatusCodes = require('http-status-codes')
+   const path = require('path');
+const { log } = require('console');
    // const { CustomAPIError } = require('../errors/index')
 
    const validate_post_create = async (req, res, next) => {
@@ -24,8 +26,8 @@
 
       let structured_errors = [] // for storing all errors as object
 
-      // file doesn\'t exists
-      if(!req.files || !req.files.file){
+      // file doesn\'t exists i.e required validation
+      if(!req.files || Object.keys(req.files).length === 0 || !req.files.file){
          let info = {
             field : "file",
             message : "File is required."
@@ -38,7 +40,7 @@
          const file_mimetype = file.mimetype // fetch the file mimetype
          const file_size = file.size // fetch the file mimetype
          
-         if(!file_mimetype.startsWith('image')){
+         if(!file_mimetype.startsWith('image')){ // if filetype is not an image
             let info = {
                field : "file",
                message : "File must be of type image."
@@ -58,17 +60,20 @@
          }
          
          // console.log("HIT", file_mimetype, file_size, structured_errors)
+         console.log("FILE", file);
          // process.exit()
-         
-         // file.mv(path, (err) => {
-         //    if (err) {
-         //       return res.status(500).send(err);
-         //    }
-         //    // return res.send({ status: "success", path: path });
-         // });
-      }
 
-      // process.exit()
+
+         // const path = __dirname + "../../uploads/posts/" + file.name + Date.now();
+         // Date.now().toString() + '_' +
+         const file_path = path.join(__dirname, '..', '..', 'server', 'uploads', 'posts', Date.now().toString() + '_' + file.name)
+         // console.log(file_path, typeof(Date.now().toString()))
+         // process.exit()
+
+         await file.mv(file_path); // (need to onfirm) since we are using express-async-errors package, we don't need to throw errors using callback as 2nd parameter
+         req.filepath = file_path // appending file path if file was uploaded properly without any errors
+      }
+      
 
       const {error, value} = create_post_schema.validate(req.body)
 
@@ -99,6 +104,8 @@
 
          return res.status(StatusCodes.UNPROCESSABLE_ENTITY).send( {error : joi_error} )
       }
+
+      console.log("trace 2")
 
       next()
    }

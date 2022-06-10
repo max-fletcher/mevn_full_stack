@@ -21,7 +21,8 @@ app.use(fileUpload({
       // },
       // createParentPath: true,
       // abortOnLimit: true
-      preserveExtension: true
+      // preserveExtension: true,
+      // useTempFiles: true
    })
 );
 
