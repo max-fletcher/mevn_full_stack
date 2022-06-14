@@ -19,7 +19,7 @@ app.use(fileUpload({
       // limits: {
       //    fileSize: 1024 * 1024 * 10 // 10 MB
       // },
-      // createParentPath: true,
+      createParentPath: true,
       // abortOnLimit: true
       // preserveExtension: true,
       // useTempFiles: true

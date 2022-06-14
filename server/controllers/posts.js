@@ -1,8 +1,6 @@
 const Post = require('../models/Post')
 const StatusCodes = require('http-status-codes')
 const { BadRequestError, NotFoundError, CustomAPIError } = require('../errors')
-const fs = require('fs')
-const { log } = require('console')
 
 const getAllPosts = async (req, res)=>{
 
@@ -61,23 +59,9 @@ const getAllPosts = async (req, res)=>{
       const title = req.body.title
       const category = req.body.category
       const description = req.body.description
-      // const old_image = req.body.old_image
-      // let new_image = ""
-      
-      if(!title || !description){
-         throw new BadRequestError(`Title, description and category required`)
-      }
-         
-      // if(req.file){
-      //    new_image = req.file.filename
-      //    await fs.unlinkSync('./uploads/' + old_image)
-      // }
-      // else{
-      //    new_image = req.body.old_image
-      // }
+      const file_path = req.body.file_path
 
-      // , image: new_image
-      const post = await Post.findOneAndUpdate({ _id: postId}, {title: title, category: category, description: description}, {
+      const post = await Post.findOneAndUpdate({ _id: postId}, {title: title, category: category, description: description, image: file_path}, {
          new: true,
          runValidators: true
       })
@@ -85,6 +69,13 @@ const getAllPosts = async (req, res)=>{
       if(!post){
          throw new NotFoundError(`Post with ID ${postId} not found !`)
       }
+
+      // console.log(file_path, req.body)
+      // process.exit()
+      
+      // if(!title || !description){
+      //    throw new BadRequestError(`Title, description and category required`)
+      // }
    
       res.status(StatusCodes.OK).json({ msg: "Post Updated", data: post })
    }
