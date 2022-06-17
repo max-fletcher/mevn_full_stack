@@ -4,7 +4,6 @@ const StatusCodes = require('http-status-codes')
 const path = require('path');
 const fs = require('fs')
 const { BadRequestError, NotFoundError, CustomAPIError } = require('../errors')
-   // const { CustomAPIError } = require('../errors/index')
 
 const validate_post_create = async (req, res, next) => {
    // const body = req.body
@@ -65,7 +64,12 @@ const validate_post_create = async (req, res, next) => {
       // console.log("FILE", file);
       // process.exit()
 
+      // making a file_path to delete file when needed. Also making a file_url to serve file to frontend
+      var base_path = __dirname.replace(/\\/g,'/').replace('/validation', '') + "/uploads"
       var file_path = path.join(__dirname, '..', '..', 'server', 'uploads', 'posts', Date.now().toString() + '_' + file.name).replace(/\\/g,'/')
+      var file_url = file_path.replace(base_path, '')
+      // console.log(base_path);
+      // console.log(file_url);
       // console.log(file_path, typeof(Date.now().toString()))
       // process.exit()
    }
@@ -103,6 +107,7 @@ const validate_post_create = async (req, res, next) => {
       // If no errors exist(both joi and file validation), upload file. Also append the file_path to the request body).
       await file.mv(file_path); // (need to onfirm) since we are using express-async-errors package, we don't need to throw errors using callback as 2nd parameter
       req.body.file_path = file_path // appending file path if file was uploaded properly without any errors
+      req.body.file_url  = file_url // appending file url for showing image using URL in frontend
    }
 
    next()
@@ -172,7 +177,10 @@ const validate_post_update = async (req, res, next) => {
       // console.log("FILE", file);
       // process.exit()
 
+      // making a file_path to delete file when needed. Also making a file_url to serve file to frontend
+      var base_path = __dirname.replace(/\\/g,'/').replace('/validation', '') + "/uploads"
       var file_path = path.join(__dirname, '..', '..', 'server', 'uploads', 'posts', Date.now().toString() + '_' + file.name).replace(/\\/g,'/')
+      var file_url = file_path.replace(base_path, '')
       // console.log(file_path, typeof(Date.now().toString()))
       // process.exit()
    }
@@ -211,6 +219,7 @@ const validate_post_update = async (req, res, next) => {
       if(file_path == "no_file_provided"){  // if no file was provided
 
          req.body.file_path = post.image   // send the old post image url in request body
+         req.body.file_url  = post.image_url   // send the old post image url in request body
 
       }
       else{  // If file was provided
@@ -220,6 +229,7 @@ const validate_post_update = async (req, res, next) => {
          // upload file. Also append the file_path to the request body).
          await file.mv(file_path); // (need to onfirm) since we are using express-async-errors package, we don't need to throw errors using callback as 2nd parameter
          req.body.file_path = file_path // appending file path if file was uploaded properly without any errors
+         req.body.file_url  = file_url // appending file url for showing image using URL in frontend
       }
    }
 

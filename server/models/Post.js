@@ -26,6 +26,10 @@ const PostSchema = new mongoose.Schema({
       type: String,
       required: [true, 'Image is required']
    },
+   image_url: {
+      type: String,
+      required: [true, 'Image URL is required']
+   },
    // content: {
    //    type: String,
    //    enum: ['interview', 'declined', 'pending'],

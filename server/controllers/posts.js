@@ -20,10 +20,10 @@ const getAllPosts = async (req, res)=>{
       const category = req.body.category
       const description = req.body.description
       const file_path = req.body.file_path
+      const file_url = req.body.file_url
+      // console.log(file_path)
 
-      console.log(file_path)
-
-      const post = await Post.create({ title: title, category: category, description: description, image: file_path })
+      const post = await Post.create({ title: title, category: category, description: description, image: file_path, image_url: file_url })
 
       res.status( StatusCodes.CREATED ).json({ msg: "Post Created", data: post })
    }
@@ -60,8 +60,9 @@ const getAllPosts = async (req, res)=>{
       const category = req.body.category
       const description = req.body.description
       const file_path = req.body.file_path
+      const file_url = req.body.file_url
 
-      const post = await Post.findOneAndUpdate({ _id: postId}, {title: title, category: category, description: description, image: file_path}, {
+      const post = await Post.findOneAndUpdate({ _id: postId}, {title: title, category: category, description: description, image: file_path, image_url: file_url}, {
          new: true,
          runValidators: true
       })
