@@ -85,7 +85,7 @@ const getAllPosts = async (req, res)=>{
       const post = await Post.findOneAndDelete({_id: postId})
    
       if(!post){
-         throw new NotFoundError(`Job with ID ${postId} not found !`)
+         throw new NotFoundError(`Post with ID ${postId} not found !`)
       }
    
       res.status(StatusCodes.OK).json({msg: "Deleted Job"})

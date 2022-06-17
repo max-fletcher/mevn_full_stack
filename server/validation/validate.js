@@ -3,6 +3,7 @@ const { create_post_schema, update_post_schema } = require('./schema/JoiSchema')
 const StatusCodes = require('http-status-codes')
 const path = require('path');
 const fs = require('fs')
+const { BadRequestError, NotFoundError, CustomAPIError } = require('../errors')
    // const { CustomAPIError } = require('../errors/index')
 
 const validate_post_create = async (req, res, next) => {
@@ -121,6 +122,16 @@ const validate_post_update = async (req, res, next) => {
    //    return res.status(400).send("No files were uploaded.");
    // }
 
+   const postId = req.params.id   //get the postId from params
+
+   const post = await Post.findOne({  // find old post
+      _id: postId
+   })
+
+   if(!post){
+      throw new NotFoundError(`Post with ID ${postId} not found !`)
+   }
+
    // initializing a joi_error object. Will append further data/errors into it if exists
    const joi_error = 
    {
@@ -181,12 +192,6 @@ const validate_post_update = async (req, res, next) => {
       }
       // return res.status(400).send({error : error})
    }
-
-   const postId = req.params.id   //get the postId from params
-
-   const post = await Post.findOne({  // find old post
-      _id: postId
-   })
 
    // throw error if any exist
    if(structured_errors.length != 0){
