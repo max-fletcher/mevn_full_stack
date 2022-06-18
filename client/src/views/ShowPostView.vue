@@ -1,7 +1,7 @@
 <template>
    <v-container>
       <h1>Show Posts</h1>
-         <v-row>
+         <v-row no-gutters>
             <v-col sm="10" class="pa-4 mx-auto">
                <v-card class="pa-2">
                   <v-img :src="post.image_url"></v-img>
