@@ -6,8 +6,8 @@ const fs = require('fs')
 const { BadRequestError, NotFoundError, CustomAPIError } = require('../errors')
 
 const validate_post_create = async (req, res, next) => {
-   const body = req.body
-   console.log(body)
+   // const body = req.body
+   // console.log(body)
 
    // if you want to throw all errors as a string
    // const {error, value} = update_post_schema.validate(req.body)
