@@ -1,9 +1,9 @@
 <template>
    <v-container>
       <h1>Home Page</h1>
-      <v-row>
+      <v-row no-gutters>
          <v-col sm="4" class="pa-3" v-for="post in posts" :key="post._id">
-            <v-card class="pa-1">
+            <v-card class="pa-1" :to="{ name: 'showPost', params: {id: post._id} }">
                <v-img height="250" :src="post.image_url"></v-img>
                <v-btn class="ml-4 mt-3" small outlined color="indigo">
                   {{ post.category }}
@@ -12,7 +12,7 @@
                   {{ post.title }}
                </v-card-title>
                <v-card-text class="py-0">
-                  <p>{{ post.description }}</p>
+                  <p>{{ post.description.substring(0, 100) + "..." }}</p>
                </v-card-text>
             </v-card>
          </v-col>

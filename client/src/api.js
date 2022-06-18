@@ -14,7 +14,7 @@ export default class API{
 
    static async getPostById(id){
       const res = await axios.get(`${url}/${id}`)
-      return res.data;
+      return res.data.data;
    }
 
    static async updatePost(id, post){
