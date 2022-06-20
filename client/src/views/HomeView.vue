@@ -7,7 +7,7 @@
 
       <v-row no-gutters>
          <v-col sm="4" class="pa-3" v-for="post in posts" :key="post._id">
-            <v-card class="pa-1" :to="{ name: 'showPost', params: {id: post._id} }">
+            <v-card class="pa-1" :to="{ name: 'ShowPost', params: {id: post._id} }">
                <v-img height="250" :src="post.image_url"></v-img>
                <v-btn class="ml-4 mt-3" small outlined color="indigo">
                   {{ post.category }}
