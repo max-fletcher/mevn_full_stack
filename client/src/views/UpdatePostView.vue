@@ -270,7 +270,6 @@ export default {
          this.previous_image = post.image_url
       } catch (error) {
          console.log(error);
-         error_snackbar
          this.$router.push({
             name: "Home",
             params: { error_message: error.response.data.error },
