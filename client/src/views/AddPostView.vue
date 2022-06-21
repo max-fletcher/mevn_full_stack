@@ -5,6 +5,26 @@
             <v-card class="pa-5">
                <v-card-title> Add New Post </v-card-title>
                <v-divider></v-divider>
+               
+               <v-snackbar
+                  top
+                  right
+                  v-model="error_snackbar"
+               >
+                  <h4 class="font-weight-medium"> {{ core_error_message }} </h4>
+
+                  <template v-slot:action="{ attrs }">
+                  <v-btn
+                     color="red"
+                     text
+                     v-bind="attrs"
+                     @click="error_snackbar = false"
+                  >
+                     <v-icon dark> mdi-close </v-icon>
+                  </v-btn>
+                  </template>
+               </v-snackbar>
+
                <v-form
                   ref="form"
                   class="pa-5"
@@ -13,7 +33,6 @@
                   lazy-validation
                >
                   <!-- :rules="title_rules" -->
-                  <!-- :error="title_error" :error-messages="error_messages.title" -->
                   <v-text-field
                      label="Title"
                      prepend-icon="mdi-format-title"
@@ -21,7 +40,6 @@
                      :error-messages="title_error_message"
                      @keyup="reset_title"
                   ></v-text-field>
-                  <!-- <v-text-field label="Category" prepend-icon="mdi-format-list-text" v-model="post.category" :rules="rules"></v-text-field> -->
                   <v-radio-group
                      label="Category"
                      v-model="post.category"
@@ -32,7 +50,7 @@
                   >
                      <v-radio label="Active" value="active"></v-radio>
                      <v-radio label="Inactive" value="inactive"></v-radio>
-                     <v-radio label="Inactive" value="sadawdawd"></v-radio>
+                     <!-- <v-radio label="Inactive" value="sadawdawd"></v-radio> -->
                   </v-radio-group>
 
                   <v-textarea
@@ -73,6 +91,7 @@ export default {
    data() {
       return {
          // rules: [(value) => !!value || "This field is required !"],
+         error_snackbar:false,
          core_error_message: null,
          
          title_error_message: "",
@@ -141,7 +160,10 @@ export default {
                   params: { message: "Post Created Successfully!" },
                });
             } catch (error) {
+
                this.core_error_message = error.message;
+               this.error_snackbar = true
+               
                if (
                   error.response.data.error.errors.find(
                      ({ field }) => field === "title"

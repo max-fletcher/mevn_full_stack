@@ -4,6 +4,9 @@
       <v-alert border="left" close-text="Close Alert" color="green accent-4" dark dismissable v-if="this.$route.params.message">
          {{ this.$route.params.message }}
       </v-alert>
+      <v-alert border="left" close-text="Close Alert" color="red accent-4" dark dismissable v-if="this.$route.params.error_message">
+         {{ this.$route.params.error_message }}
+      </v-alert>
 
       <v-row no-gutters>
          <v-col sm="4" class="pa-3" v-for="post in posts" :key="post._id">
@@ -43,6 +46,7 @@
          this.posts = await API.getAllPosts()
          // console.log(this.posts);
          console.log(this.$route.params.message);
+         console.log(this.$route.params.error_message);
       },
    }
 </script>

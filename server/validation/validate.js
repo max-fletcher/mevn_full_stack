@@ -149,12 +149,12 @@ const validate_post_update = async (req, res, next) => {
    if(!req.files || Object.keys(req.files).length === 0 || !req.files.file){
       var file_path = 'no_file_provided';
 
-      let info = {
-         field : "file",
-         message : "File is required."
-      }
+      // let info = {
+      //    field : "file",
+      //    message : "File is required."
+      // }
 
-      structured_errors.push(info)
+      // structured_errors.push(info)
    }
    else{
       var file = req.files.file; // store file in variable
