@@ -55,9 +55,9 @@
                   <v-btn type="submit" class="mt-3" color="primary">
                      Add Post
                   </v-btn>
-                  <v-btn @click="reset_file" class="mt-3" color="primary">
+                  <!-- <v-btn @click="reset_file" class="mt-3" color="primary">
                      Reset
-                  </v-btn>
+                  </v-btn> -->
                </v-form>
             </v-card>
          </v-col>
@@ -117,11 +117,12 @@ export default {
       selectFile(file) {
          this.reset_file()
          this.file_error = false;
-         console.log("messag", this.post);
+         this.post.image = file
+         console.log("message", this.post);
       },
 
       async submitForm() {
-         console.log(this.post);
+         // console.log(this.post);
          if (this.$refs.form.validate()) {
             const formData = new FormData();
             formData.append("title", this.post.title);
@@ -182,7 +183,7 @@ export default {
                   ).message;
                   this.file_error = true;
                }
-               console.log(this.title_error_message, this.title_error);
+               // console.log(this.title_error_message, this.title_error);
                // console.log(this.error_messages.title)
                // console.log(error.response.data.error.errors)
             }
@@ -207,19 +208,19 @@ export default {
          this.file_error_message = ""
       },
 
-      reset() {
-         // this.title_error = false;
-         // this.category_error = false;
-         // this.description_error = false;
-         // this.file_error = false;
+      // reset() {
+      //    // this.title_error = false;
+      //    // this.category_error = false;
+      //    // this.description_error = false;
+      //    // this.file_error = false;
 
-         this.title_error_message = "";
-         this.category_error_message = "";
-         this.description_error_message = "";
-         this.file_error_message = "";
+      //    this.title_error_message = "";
+      //    this.category_error_message = "";
+      //    this.description_error_message = "";
+      //    this.file_error_message = "";
 
-         // console.log(this.title_error_message, this.title_error);
-      },
+      //    // console.log(this.title_error_message, this.title_error);
+      // },
    },
 
    components: {
