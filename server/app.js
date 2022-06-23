@@ -11,7 +11,7 @@ const rateLimiter = require('express-rate-limit')
 const express = require('express')
 const res = require('express/lib/response')
 const app = express()
-// const authenticateUser = require('./middleware/authentication') // import authenticate middleware to check if a user is logged in (i.e has JWT)
+const authenticateUser = require('./middleware/authentication') // import authenticate middleware to check if a user is logged in (i.e has JWT)
 
 // Express File Upload
 const fileUpload = require("express-fileupload");
@@ -30,7 +30,7 @@ app.use(fileUpload({
 const connectDB = require('./db/connect')
 
 // routers
-// const authRouter = require('./routes/auth')
+const authRouter = require('./routes/auth')
 const postsRouter = require('./routes/posts')
 
 // error handler
@@ -48,10 +48,10 @@ app.use(cors());
 app.use(xss());
 
 // routes
-// app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/auth', authRouter)
 // a middleware "AuthenticateUser" is applied here instead of the controller functions individually.
 // app.use('/api/v1/jobs', authenticateUser , jobsRouter)
-app.use('/api/v1/posts' , postsRouter)
+app.use('/api/v1/posts', authenticateUser, postsRouter)
 
 // fallback routes
 app.use(notFoundMiddleware);
