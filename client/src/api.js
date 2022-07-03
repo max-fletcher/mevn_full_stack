@@ -1,7 +1,18 @@
 import axios from "axios"
 const url = "/api/v1/posts"
+const auth_url = "/api/v1/auth"
 
 export default class API{
+   static async login(authData){
+      const res = await axios.post(`${auth_url}/login`, authData)
+      return res.data;
+   }
+
+   static async register(authData){
+      const res = await axios.post(`${auth_url}/register`, authData)
+      return res.data;
+   }
+
    static async getAllPosts(){
       const res = await axios.get(url)
       return res.data.data;
