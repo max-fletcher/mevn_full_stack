@@ -24,7 +24,7 @@
                   
                   <v-card-text class="gray--text">
                      <p>{{ post.description }}</p>
-                     <p>{{ post.createdAt }}</p>
+                     <p>{{ new Date(post.createdAt).toDateString() }} , {{ new Date(post.createdAt).toLocaleTimeString() }}</p>
                   </v-card-text>
 
                </v-card>
