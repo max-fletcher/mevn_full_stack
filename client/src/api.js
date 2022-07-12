@@ -13,13 +13,6 @@ export default class API{
       return res.data;
    }
 
-   // axios.get('https://api.github.com/user', {
-   //    headers: {
-   //       'Authorization': `token ${access_token}`
-   //    }
-   // })
-
-
    static async getAllPosts(){
       console.log(window.localStorage.getItem('auth_token'))
       const res = await axios.get(url, { headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('auth_token') } } )

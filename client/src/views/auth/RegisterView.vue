@@ -1,9 +1,9 @@
 <template>
-   <v-container>
+   <v-container class="mx-auto my-auto">
       <v-row no-gutters>
-         <v-col sm="10" class="mx-auto">
+         <v-col>
             <v-card class="pa-5">
-               <v-card-title> Add New Post </v-card-title>
+               <v-card-title> Register </v-card-title>
                <v-divider></v-divider>
                
                <v-snackbar
@@ -32,50 +32,53 @@
                   enctype="multipart/form-data"
                   lazy-validation
                >
-                  <!-- :rules="title_rules" -->
+                  <!-- :rules="email_rules" -->
+
                   <v-text-field
-                     label="Title"
-                     prepend-icon="mdi-format-title"
-                     v-model="post.title"
-                     :error-messages="title_error_message"
-                     @keyup="reset_title"
+                     label="Name"
+                     prepend-icon="mdi-account"
+                     v-model="auth.name"
+                     :error-messages="name_error_message"
+                     @keyup="reset_name"
+                     @keyup.native.enter="submitForm()"
                   ></v-text-field>
-                  <v-radio-group
-                     label="Category"
-                     v-model="post.category"
-                     prepend-icon="mdi-format-list-text"
-                     mandatory
-                     :error-messages="category_error_message"
-                     @change="reset_category"
-                  >
-                     <v-radio label="Active" value="active"></v-radio>
-                     <v-radio label="Inactive" value="inactive"></v-radio>
-                     <!-- <v-radio label="Inactive" value="sadawdawd"></v-radio> -->
-                  </v-radio-group>
+
+                  <v-text-field
+                     label="Email"
+                     prepend-icon="mdi-email"
+                     v-model="auth.email"
+                     :error-messages="email_error_message"
+                     @keyup="reset_email"
+                     @keyup.native.enter="submitForm()"
+                  ></v-text-field>
 
                   <v-textarea
-                     label="Description"
+                     label="Password"
                      prepend-icon="mdi-clipboard-text-outline"
-                     v-model="post.description"
+                     v-model="auth.password"
                      auto-grow
                      rows="2"
-                     :error-messages="description_error_message"
-                     @keyup="reset_description"
+                     :error-messages="password_error_message"
+                     @keyup="reset_password"
+                     @keyup.native.enter="submitForm()"
                   ></v-textarea>
                   <!-- :rules="rules" -->
-                  <v-file-input
-                     label="Select Image"
-                     @change="selectFile"
-                     ref="file"
-                     show-size
-                     :error-messages="file_error_message"
-                  ></v-file-input>
+
+                  <!-- 
+                  <v-textarea
+                     label="Confirm Password"
+                     prepend-icon="mdi-clipboard-text-outline"
+                     v-model="auth.confirm_password"
+                     auto-grow
+                     rows="2"
+                     @keyup="reset_confirm_password"
+                     @keyup.enter="submitForm()"
+                  ></v-textarea>
+                  -->
+
                   <v-btn type="submit" class="mt-3" color="primary">
-                     Add Post
+                     Register
                   </v-btn>
-                  <!-- <v-btn @click="reset_file" class="mt-3" color="primary">
-                     Reset
-                  </v-btn> -->
                </v-form>
             </v-card>
          </v-col>
@@ -84,9 +87,10 @@
 </template>
 
 <script>
+import axios from 'axios';
 import API from "../../api";
 export default {
-   name: "Register",
+   name: "Login",
 
    data() {
       return {
@@ -94,117 +98,102 @@ export default {
          error_snackbar:false,
          core_error_message: null,
          
-         title_error_message: "",
-         category_error_message: "",
-         description_error_message: "",
-         file_error_message: "",
+         name_error_message: "",
+         email_error_message: "",
+         password_error_message: "",
 
-         post: {
-            title: "",
-            category: "",
-            description: "",
-            image: "",
+         auth: {
+            name: "",
+            email: "",
+            password: "",
+            confirm_password: "",
          },
 
-         // title_rules: [
-         //    (v) => !!v || "Title is required",
-         //    (v) =>
-         //       (v && v.length >= 3) ||
-         //       "Title must be greater than 3 characters",
-         //    (v) =>
-         //       (v && v.length <= 100) ||
-         //       "Title must be less than 100 characters",
-         // ],
-         // description_rules: [
-         //    (v) => !!v || "Description is required",
-         //    (v) =>
-         //       (v && v.length >= 3) ||
-         //       "Title must be greater than 3 characters",
-         //    (v) =>
-         //       (v && v.length <= 1000) ||
-         //       "Title must be less than 1000 characters",
-         // ],
-         // category_rules: [
-         //    (v) => !!v || "Description is required",
-         //    (v) =>
-         //       (v && v != 'active') || (v && v != 'inactive')
-         // ],
+         name_rules: [
+            (v) => !!v || "Name is required",
+            (v) =>
+               (v && v.length >= 3) ||
+               "Name must be greater than 3 characters",
+         ],
+         email_rules: [
+            (v) => !!v || "Email is required",
+            (v) => /.+@.+/.test(v) || 'E-mail must be valid',
+         ],
+         password_rules: [
+            (v) => !!v || "password is required",
+            (v) =>
+               (v && v.length >= 6) ||
+               "Password must be greater than 6 characters",
+            (v) => v === this.auth.password_confirm || "password and confirm doesn't match",
+         ],
       };
    },
 
    methods: {
-      selectFile(file) {
-         this.reset_file()
-         this.file_error = false;
-         this.post.image = file
-         console.log("message", this.post);
-      },
-
       async submitForm() {
          // console.log(this.post);
          if (this.$refs.form.validate()) {
             const formData = new FormData();
-            formData.append("title", this.post.title);
-            formData.append("category", this.post.category);
-            formData.append("description", this.post.description);
-            formData.append("file", this.post.image);
+            formData.append("name", this.auth.name);
+            formData.append("email", this.auth.email);
+            formData.append("password", this.auth.password);
 
             // for (const value of formData.values()) {
             //    console.log(value);
             // }
 
             try {
-               const response = await API.storePost(formData);
+               const response = await API.register(formData);
+
+               window.localStorage.setItem('auth_user', response.user.name);
+               window.localStorage.setItem('auth_token', response.token);
+
+               console.log("Register VIew", window.localStorage.getItem('auth_token'))
+
                this.$router.push({
                   name: "Home",
-                  params: { message: "Post Created Successfully!" },
+                  params: { message: "Registration Successful !!" },
                });
+
             } catch (error) {
+
+               console.log(error)
 
                this.core_error_message = error.message;
                this.error_snackbar = true
-               
+
                if (
                   error.response.data.error.errors.find(
-                     ({ field }) => field === "title"
+                     ({ field }) => field === "name"
                   )
                ) {
-                  this.title_error_message = error.response.data.error.errors.find(
-                     ({ field }) => field === "title"
+                  this.name_error_message = error.response.data.error.errors.find(
+                     ({ field }) => field === "name"
                   ).message;
-                  this.title_error = true;
+                  this.name_error = true;
                }
                if (
                   error.response.data.error.errors.find(
-                     ({ field }) => field === "category"
+                     ({ field }) => field === "email"
                   )
                ) {
-                  this.category_error_message = error.response.data.error.errors.find(
-                     ({ field }) => field === "category"
+                  this.email_error_message = error.response.data.error.errors.find(
+                     ({ field }) => field === "email"
                   ).message;
-                  this.category_error = true;
+                  this.email_error = true;
                }
                if (
                   error.response.data.error.errors.find(
-                     ({ field }) => field === "description"
+                     ({ field }) => field === "password"
                   )
                ) {
-                  this.description_error_message =
+                  this.password_error_message =
                      error.response.data.error.errors.find(
-                        ({ field }) => field === "description"
+                        ({ field }) => field === "password"
                      ).message;
-                  this.description_error = true;
+                  this.password_error = true;
                }
-               if (
-                  error.response.data.error.errors.find(
-                     ({ field }) => field === "file"
-                  )
-               ) {
-                  this.file_error_message = error.response.data.error.errors.find(
-                     ({ field }) => field === "file"
-                  ).message;
-                  this.file_error = true;
-               }
+
                // console.log(this.title_error_message, this.title_error);
                // console.log(this.error_messages.title)
                // console.log(error.response.data.error.errors)
@@ -214,35 +203,19 @@ export default {
          }
       },
 
-      reset_title() {
-         this.title_error_message = ""
+      reset_name() {
+         this.name_error_message = ""
+      },
+      reset_email() {
+         this.email_error_message = ""
+      },
+      reset_password() {
+         this.password_error_message = ""
+      },
+      reset_confirm_password() {
+         this.password_error_message = ""
       },
 
-      reset_category() {
-         this.category_error_message = ""
-      },
-
-      reset_description() {
-         this.description_error_message = ""
-      },
-
-      reset_file() {
-         this.file_error_message = ""
-      },
-
-      // reset() {
-      //    // this.title_error = false;
-      //    // this.category_error = false;
-      //    // this.description_error = false;
-      //    // this.file_error = false;
-
-      //    this.title_error_message = "";
-      //    this.category_error_message = "";
-      //    this.description_error_message = "";
-      //    this.file_error_message = "";
-
-      //    // console.log(this.title_error_message, this.title_error);
-      // },
    },
 
    components: {

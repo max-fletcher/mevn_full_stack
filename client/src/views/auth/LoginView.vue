@@ -1,7 +1,12 @@
 <template>
-   <v-container>
+   <v-container class="mx-auto my-auto">
       <v-row no-gutters>
-         <v-col sm="10" class="mx-auto">
+         <v-col>
+
+            <v-alert border="left" close-text="Close Alert" color="green accent-4" dark dismissable v-if="this.unauthenticated">
+               {{ this.message }}
+            </v-alert>
+
             <v-card class="pa-5">
                <v-card-title> Login </v-card-title>
                <v-divider></v-divider>
@@ -35,11 +40,11 @@
                   <!-- :rules="email_rules" -->
                   <v-text-field
                      label="Email"
-                     prepend-icon="mdi-format-title"
+                     prepend-icon="mdi-email"
                      v-model="auth.email"
                      :error-messages="email_error_message"
                      @keyup="reset_email"
-                     @keyup.enter="submitForm()"
+                     @keyup.native.enter="submitForm()"
                   ></v-text-field>
 
                   <v-textarea
@@ -50,7 +55,7 @@
                      rows="2"
                      :error-messages="password_error_message"
                      @keyup="reset_password"
-                     @keyup.enter="submitForm()"
+                     @keyup.native.enter="submitForm()"
                   ></v-textarea>
                   <!-- :rules="rules" -->
 
@@ -72,6 +77,9 @@ export default {
 
    data() {
       return {
+         unauthenticated: "",
+         message: "",
+
          // rules: [(value) => !!value || "This field is required !"],
          error_snackbar:false,
          core_error_message: null,
@@ -129,27 +137,27 @@ export default {
                this.core_error_message = error.message;
                this.error_snackbar = true
                
-               // if (
-               //    error.response.data.error.errors.find(
-               //       ({ field }) => field === "email"
-               //    )
-               // ) {
-               //    this.email_error_message = error.response.data.error.errors.find(
-               //       ({ field }) => field === "email"
-               //    ).message;
-               //    this.email_error = true;
-               // }
-               // if (
-               //    error.response.data.error.errors.find(
-               //       ({ field }) => field === "password"
-               //    )
-               // ) {
-               //    this.password_error_message =
-               //       error.response.data.error.errors.find(
-               //          ({ field }) => field === "password"
-               //       ).message;
-               //    this.password_error = true;
-               // }
+               if (
+                  error.response.data.error.errors.find(
+                     ({ field }) => field === "email"
+                  )
+               ) {
+                  this.email_error_message = error.response.data.error.errors.find(
+                     ({ field }) => field === "email"
+                  ).message;
+                  this.email_error = true;
+               }
+               if (
+                  error.response.data.error.errors.find(
+                     ({ field }) => field === "password"
+                  )
+               ) {
+                  this.password_error_message =
+                     error.response.data.error.errors.find(
+                        ({ field }) => field === "password"
+                     ).message;
+                  this.password_error = true;
+               }
 
                // console.log(this.title_error_message, this.title_error);
                // console.log(this.error_messages.title)
@@ -172,6 +180,13 @@ export default {
 
    components: {
       // HelloWorld,
+   },
+
+   created() {
+      if (this.$route.query.message) {
+         this.unauthenticated = true;
+         this.message = this.$route.query.message;
+      }
    },
 };
 </script>
