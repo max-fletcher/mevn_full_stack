@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import API from "../../api";
 export default {
    name: "Login",
@@ -114,7 +115,7 @@ export default {
                window.localStorage.setItem('auth_user', response.user.name);
                window.localStorage.setItem('auth_token', response.token);
 
-               console.log(window.localStorage.getItem('auth_token'))
+               console.log("Login VIew", window.localStorage.getItem('auth_token'))
 
                this.$router.push({
                   name: "Home",

@@ -13,28 +13,36 @@ export default class API{
       return res.data;
    }
 
+   // axios.get('https://api.github.com/user', {
+   //    headers: {
+   //       'Authorization': `token ${access_token}`
+   //    }
+   // })
+
+
    static async getAllPosts(){
-      const res = await axios.get(url)
+      console.log(window.localStorage.getItem('auth_token'))
+      const res = await axios.get(url, { headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('auth_token') } } )
       return res.data.data;
    }
 
    static async storePost(postData){
-      const res = await axios.post(url, postData)
+      const res = await axios.post(url, postData, { headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('auth_token') } } )
       return res.data;
    }
 
    static async getPostById(id){
-      const res = await axios.get(`${url}/${id}`)
+      const res = await axios.get(`${url}/${id}`, { headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('auth_token') } } )
       return res.data.data;
    }
 
    static async updatePost(id, post){
-      const res = await axios.patch(`${url}/${id}`, post)
+      const res = await axios.patch(`${url}/${id}`, post, { headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('auth_token') } } )
       return res.data;
    }
 
    static async deletePost(id){
-      const res = await axios.delete(`${url}/${id}`)
+      const res = await axios.delete(`${url}/${id}`, { headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('auth_token') } } )
       return res.data;
    }
 }

@@ -44,9 +44,9 @@
 
       async created() {
          this.posts = await API.getAllPosts()
-         // console.log(this.posts);
-         console.log(this.$route.params.message);
-         console.log(this.$route.params.error_message);
+         console.log("Posts", this.posts);
+         console.log("Success Message", this.$route.params.message);
+         console.log("Error Message", this.$route.params.error_message);
       },
    }
 </script>
