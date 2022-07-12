@@ -57,9 +57,9 @@ export default {
    data: () => ({ 
       drawer: null, // used to control sidebar toggle
       items: [  // sidebar items
-         { title: 'Home', icon: 'mdi-home', link: "/" },
+         { title: 'Home', icon: 'mdi-home', link: "/posts/home" },
          { title: 'Add Post', icon: 'mdi-note-plus', link: "/add-post" },
-         { title: 'About', icon: 'mdi-help-box', link: "/about" },
+         { title: 'About', icon: 'mdi-help-box', link: "/posts/about" },
       ],
    }),
 }

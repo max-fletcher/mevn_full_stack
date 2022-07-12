@@ -7,51 +7,77 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-
-
+   // {
+   //    path: '*',
+   //    component: NotFound,
+   //    name: 'NotFound',
+   //    meta: { title: '404 Not Found' },
+   // },
    {
       path: '/login',
       name: 'Login',
-      component: () => import(/* webpackChunkName: "about" */ '../views/auth/LoginView.vue')   
+      component: () => import('../views/auth/LoginView.vue')
    },
    {
       path: '/register',
       name: 'Register',
-      component: () => import(/* webpackChunkName: "about" */ '../views/auth/RegisterView.vue')
+      component: () => import('../views/auth/RegisterView.vue')
    },
-
 
    {
-      path: '/',
-      name: 'Home',
-      component: () => import(/* webpackChunkName: "about" */ '../views/HomeView.vue')
+      path: '/posts',
+      name: 'Posts',
+      component: () => import('../views/PostsView.vue'),
+      children: [
+         {
+            // UserProfile will be rendered inside User's <router-view>
+            // when /user/:id/profile is matched
+            path: 'home',
+            name: 'Home',
+            component: () => import('../views/HomeView.vue')
+         },
+         {
+            // UserPosts will be rendered inside User's <router-view>
+            // when /user/:id/posts is matched
+            path: 'about',
+            name: 'About',
+            component: () => import('../views/AboutView.vue')
+         },
+      ],
    },
+
+   
+   // {
+   //    path: '/home',
+   //    name: 'Home',
+   //    component: () => import('../views/HomeView.vue')
+   // },
    {
       path: '/post/:id',
       name: 'ShowPost',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ '../views/ShowPostView.vue')
+      component: () => import('../views/ShowPostView.vue')
    },
    {
       path: '/add-post',
       name: 'AddPost',
-      component: () => import(/* webpackChunkName: "about" */ '../views/AddPostView.vue')
+      component: () => import('../views/AddPostView.vue')
    },
    {
       path: '/update-post/:id',
       name: 'UpdatePost',
-      component: () => import(/* webpackChunkName: "about" */ '../views/UpdatePostView.vue')
+      component: () => import('../views/UpdatePostView.vue')
    },
-   {
-      path: '/about',
-      name: 'About',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-   }
+   // {
+   //    path: '/about',
+   //    name: 'About',
+   //    // route level code-splitting
+   //    // this generates a separate chunk (about.[hash].js) for this route
+   //    // which is lazy-loaded when the route is visited.
+   //    component: () => import('../views/AboutView.vue')
+   // }
 ]
 
 const router = new VueRouter({

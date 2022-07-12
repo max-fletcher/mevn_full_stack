@@ -39,6 +39,7 @@
                      v-model="auth.email"
                      :error-messages="email_error_message"
                      @keyup="reset_email"
+                     @keyup.enter="submitForm()"
                   ></v-text-field>
 
                   <v-textarea
@@ -49,6 +50,7 @@
                      rows="2"
                      :error-messages="password_error_message"
                      @keyup="reset_password"
+                     @keyup.enter="submitForm()"
                   ></v-textarea>
                   <!-- :rules="rules" -->
 
@@ -109,12 +111,15 @@ export default {
             try {
                const response = await API.login(formData);
 
-               console.log(response)
+               window.localStorage.setItem('auth_user', response.user.name);
+               window.localStorage.setItem('auth_token', response.token);
 
-               // this.$router.push({
-               //    name: "Home",
-               //    params: { message: "Post Created Successfully!" },
-               // });
+               console.log(window.localStorage.getItem('auth_token'))
+
+               this.$router.push({
+                  name: "Home",
+                  params: { message: "Login Successful !!" },
+               });
 
             } catch (error) {
 
